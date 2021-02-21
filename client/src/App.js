@@ -1,30 +1,28 @@
 import "./App.css";
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Container, NavItem, Row } from "react-bootstrap";
+import { Container, Row } from "react-bootstrap";
 import axios from "axios";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import Dropdown from "react-bootstrap/Dropdown";
 import { Line } from "react-chartjs-2";
-var _ = require("lodash");
 
 function App() {
   const [loading, setLoading] = useState(true);
   const [loadingData, setLoadingData] = useState(null);
   const [data, setData] = useState([]);
   const [countryData, setCountryData] = useState([]);
-  const [deaths, setDeaths] = useState([]);
-  const [cases, setCases] = useState([]);
-  const [time, setTime] = useState([]);
+  let [deaths, setDeaths] = useState([]);
+  let [cases, setCases] = useState([]);
+  let [time, setTime] = useState([]);
 
-  const chartData = {
+  let chartData = {
     labels: time,
     datasets: [
       {
         label: "Cases",
         data: cases,
         fill: false,
-        backgroundColor: "rgba(75,192,192,0.2)",
         borderColor: "rgba(75,192,192,1)",
       },
       {
@@ -47,7 +45,7 @@ function App() {
     }
   };
 
-  // Get array only of unique values, get lose of duplicates
+  // Get array only of unique values
   const getCountries = () => {
     let countries = new Array();
     // Get all countries
@@ -64,16 +62,18 @@ function App() {
   const handleClick = async (e) => {
     setLoadingData(true);
     // Get selected value from dropdown
-    const selectedValue = e.target.innerHTML;
+    let selectedValue = e.target.innerHTML;
     try {
-      // Making request by country param
+      // Make request by country param
       const response = await axios.get(`/api/${selectedValue}`);
       response.data.forEach((item) => {
-        // Looking for countries
+        // Look for countries
         if (item.country === selectedValue) {
           countryData.unshift(item);
         }
       });
+
+      // Get all cases & deaths
       countryData.map((item, value) => {
         if (item.indicator === "cases") {
           cases.unshift(item.weekly_count);
@@ -82,13 +82,15 @@ function App() {
           deaths.unshift(item.weekly_count);
         }
       });
+      // Reset countryData value
+      setCountryData([]);
     } catch (error) {
       console.error(`Received an error: ${error}`);
     }
     setLoadingData(false);
   };
 
-  // Get all data on first load
+  // Get all data on load
   useEffect(() => {
     getAllData();
   }, []);
@@ -106,6 +108,7 @@ function App() {
     <>
       <Container>
         <Row>
+          {/* Display countries for dropdown */}
           <DropdownButton title="Countries">
             {getCountries().map((item, key) => {
               return (
