@@ -12,22 +12,25 @@ function App() {
   const [loadingData, setLoadingData] = useState(null);
   const [data, setData] = useState([]);
   const [countryData, setCountryData] = useState([]);
-  let [deaths, setDeaths] = useState([]);
-  let [cases, setCases] = useState([]);
-  let [time, setTime] = useState([]);
+  const [deaths, setDeaths] = useState([]);
+  const [cases, setCases] = useState([]);
+  const [time, setTime] = useState([]);
+  const [displayTime, setDisplayTime] = useState([]);
+  const [displayDeaths, setDisplayDeaths] = useState([]);
+  const [displayCases, setDisplayCases] = useState([]);
 
   let chartData = {
-    labels: time,
+    labels: displayTime,
     datasets: [
       {
         label: "Cases",
-        data: cases,
+        data: displayCases,
         fill: false,
         borderColor: "rgba(75,192,192,1)",
       },
       {
         label: "Deaths",
-        data: deaths,
+        data: displayDeaths,
         fill: false,
         borderColor: "#742774",
       },
@@ -75,18 +78,25 @@ function App() {
 
       // Get all cases & deaths
       countryData.map((item, value) => {
+        setCountryData([]);
+        setTime([]);
+        setDeaths([]);
+        setCases([]);
         if (item.indicator === "cases") {
           cases.unshift(item.weekly_count);
-          time.unshift(item.year_week);
         } else {
           deaths.unshift(item.weekly_count);
         }
+        time.unshift(item.year_week);
       });
-      // Reset countryData value
-      setCountryData([]);
+      let uniqueTime = [...new Set(time)];
+      setDisplayTime(uniqueTime);
+      setDisplayDeaths(deaths);
+      setDisplayCases(cases);
     } catch (error) {
       console.error(`Received an error: ${error}`);
     }
+
     setLoadingData(false);
   };
 
