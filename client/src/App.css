@@ -1,0 +1,14 @@
+.loading {
+  display: flex;
+  justify-content: center;
+  font-size: 5vh;
+  font-weight: bold;
+}
+
+.country-row.row {
+  justify-content: center;
+}
+
+.table {
+  border: 1px solid black;
+}
