@@ -14,13 +14,13 @@ function App() {
   const [countryData, setCountryData] = useState([]);
   const [deaths, setDeaths] = useState([]);
   const [cases, setCases] = useState([]);
-  const [time, setTime] = useState([]);
-  const [displayTime, setDisplayTime] = useState([]);
+  const [date, setDate] = useState([]);
+  const [displayDate, setDisplayDate] = useState([]);
   const [displayDeaths, setDisplayDeaths] = useState([]);
   const [displayCases, setDisplayCases] = useState([]);
 
   let chartData = {
-    labels: displayTime,
+    labels: displayDate,
     datasets: [
       {
         label: "Cases",
@@ -78,8 +78,8 @@ function App() {
 
       // Get all cases & deaths
       countryData.map((item, value) => {
-        setCountryData([]);
-        setTime([]);
+        // Reset all values
+        setDate([]);
         setDeaths([]);
         setCases([]);
         if (item.indicator === "cases") {
@@ -87,16 +87,14 @@ function App() {
         } else {
           deaths.unshift(item.weekly_count);
         }
-        time.unshift(item.year_week);
+        date.unshift(item.year_week);
       });
-      let uniqueTime = [...new Set(time)];
-      setDisplayTime(uniqueTime);
+      setDisplayDate([...new Set(date)]);
       setDisplayDeaths(deaths);
       setDisplayCases(cases);
     } catch (error) {
       console.error(`Received an error: ${error}`);
     }
-
     setLoadingData(false);
   };
 
