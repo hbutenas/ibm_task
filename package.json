@@ -4,7 +4,7 @@
   "description": "Ibm task",
   "main": "server.js",
   "scripts": {
-    "client-install": "npm insall --prefix client",
+    "client-install": "npm install --prefix client",
     "start": "node server.js",
     "server": "nodemon server.js",
     "client": "npm start --prefix client",
